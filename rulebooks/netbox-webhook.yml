@@ -1,0 +1,26 @@
+---
+- name: Listen for netbox events on a webhook
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+
+  rules:
+
+## vlan
+  - name: VLAN created event
+    condition: event.payload.event == "created" and event.payload.model == "vlan"
+    action:
+      run_job_template:
+        organization: "Default"
+        name: "Create VLAN"
+
+## ntp
+  - name: NTP updates
+    condition: event.payload.event == "job_ended" and event.payload.model == "branch" and event.payload.data.log is search("config context ntp_servers", ignorecase=true)
+    action:
+      run_job_template:
+        organization: "Default"
+        name: "Configure NTP Servers"
+
