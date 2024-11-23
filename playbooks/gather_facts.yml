@@ -1,0 +1,21 @@
+---
+- name: 
+  connection: ansible.netcommon.network_cli
+  hosts: platforms_ios, platforms_eos
+  vars:
+    ssl_verify: True
+  tasks:
+    - name: Gather Cisco IOS facts
+      when: "ansible_network_os == 'ios'"
+      cisco.ios.ios_facts:
+        gather_subset: "min"
+
+    - name: Gather Arista EOS facts
+      when: "ansible_network_os == 'eos'"
+      arista.eos.eos_facts:
+        gather_subset: "config"
+        gather_network_resources: "{{ network_resource | default('!bgp_global,!bgp_address_family') }}"
+
+    - name: Display facts
+      ansible.builtin.debug:
+        var: ansible_network_resources
