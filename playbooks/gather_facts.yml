@@ -1,6 +1,7 @@
 ---
 - name: 
   connection: ansible.netcommon.network_cli
+  hosts: sites_eda-testing
   vars:
     ssl_verify: True
   tasks:
