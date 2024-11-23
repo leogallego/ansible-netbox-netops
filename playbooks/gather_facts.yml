@@ -1,7 +1,6 @@
 ---
 - name: 
   connection: ansible.netcommon.network_cli
-  hosts: platforms_ios, platforms_eos
   vars:
     ssl_verify: True
   tasks:
